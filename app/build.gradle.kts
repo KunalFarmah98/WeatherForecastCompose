@@ -56,9 +56,8 @@ dependencies {
     //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:${Versions.hilt_version}")
     kapt ("com.google.dagger:hilt-android-compiler:${Versions.hilt_version}")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
     kapt ("androidx.hilt:hilt-compiler:1.0.0")
-    implementation("androidx.hilt:hilt-navigation-compose:1.0.0-beta01")
+    implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     //material icons - use with caution!
     // implementation("androidx.compose.material:material-icons-extended:$compose_version"
