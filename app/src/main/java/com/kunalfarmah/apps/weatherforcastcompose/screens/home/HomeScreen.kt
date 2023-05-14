@@ -19,11 +19,11 @@ fun HomeScreen(navController: NavController) {
     val weatherViewModel: WeatherViewModel  = hiltViewModel()
     weatherViewModel.getCurrentForecast("delhi")
     weatherViewModel.getDailyForecast("delhi")
-    ShowData(weatherViewModel = weatherViewModel)
+    MainScaffold(weatherViewModel = weatherViewModel)
 }
 
 @Composable
-fun ShowData(weatherViewModel: WeatherViewModel) {
+fun MainScaffold(weatherViewModel: WeatherViewModel) {
 
     val dailyDataFlow = weatherViewModel.dailyData.collectAsState().value
 
@@ -36,7 +36,7 @@ fun ShowData(weatherViewModel: WeatherViewModel) {
         else {
             var weather = ""
             dailyDataFlow.data?.list?.forEach {
-                weather+it.weather.toString()
+                weather+=it.weather.toString()
             }
             Text(text = weather)
         }
