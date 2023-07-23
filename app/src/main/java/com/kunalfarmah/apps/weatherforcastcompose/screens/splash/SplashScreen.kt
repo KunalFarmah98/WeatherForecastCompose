@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.navArgument
 import com.kunalfarmah.apps.weatherforcastcompose.R
 import com.kunalfarmah.apps.weatherforcastcompose.nav.WeatherScreens
 import kotlinx.coroutines.delay
@@ -33,6 +34,7 @@ fun SplashScreen( navController: NavController) {
     val scale = remember {
        Animatable(0f)
     }
+    val defaultCity = "delhi"
 
     // to launch a coroutine right after launch
     LaunchedEffect(key1 = true, block = {
@@ -47,7 +49,7 @@ fun SplashScreen( navController: NavController) {
         )
         delay(1000)
         // go to homeScreen after 2s following the animation
-        navController.navigate(route = WeatherScreens.HomeScreen.name)
+        navController.navigate(route = "${WeatherScreens.HomeScreen.name}/$defaultCity")
     })
     Surface(
         modifier = Modifier

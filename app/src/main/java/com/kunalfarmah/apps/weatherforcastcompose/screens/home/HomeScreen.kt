@@ -27,6 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.kunalfarmah.apps.weatherforcastcompose.data.DataOrException
 import com.kunalfarmah.apps.weatherforcastcompose.model.DailyForecast
+import com.kunalfarmah.apps.weatherforcastcompose.nav.WeatherScreens
 import com.kunalfarmah.apps.weatherforcastcompose.viewmodel.WeatherViewModel
 import com.kunalfarmah.apps.weatherforcastcompose.widgets.HumidityWindPressureRow
 import com.kunalfarmah.apps.weatherforcastcompose.widgets.SunsetSunriseRow
@@ -39,11 +40,11 @@ import kotlin.math.roundToInt
 
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, city: String?) {
     val weatherViewModel: WeatherViewModel = hiltViewModel()
-    weatherViewModel.getCurrentForecast("delhi")
-    weatherViewModel.getDailyForecast("delhi")
-    val currentData = weatherViewModel.currentData.collectAsState()
+//    weatherViewModel.getCurrentForecast(city?:"delhi")
+    weatherViewModel.getDailyForecast(city?:"delhi")
+//    val currentData = weatherViewModel.currentData.collectAsState()
     val dailyData = weatherViewModel.dailyData.collectAsState().value
     MainScaffold(dailyData, navController)
 }
@@ -59,7 +60,10 @@ fun MainScaffold(
         WeatherAppBar(
             title = "${dailyData.data?.city?.name ?: ""}, ${dailyData.data?.city?.country ?: ""}",
             navController = navController,
-            elevation = 5.dp
+            elevation = 5.dp,
+            onAddActionClicked = {
+                navController.navigate(WeatherScreens.SearchScreen.name)
+            }
         ) {
             Log.d("Home", "MainScaffold: button clicked")
         }
