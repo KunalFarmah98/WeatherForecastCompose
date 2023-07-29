@@ -22,9 +22,9 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.navArgument
 import com.kunalfarmah.apps.weatherforcastcompose.R
 import com.kunalfarmah.apps.weatherforcastcompose.nav.WeatherScreens
 import kotlinx.coroutines.delay
@@ -73,7 +73,7 @@ fun SplashScreen( navController: NavController) {
                 contentScale = ContentScale.Fit
             )
             Text(
-                "Find the Sun",
+                stringResource(id = R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.LightGray
             )

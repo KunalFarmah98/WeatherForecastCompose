@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -44,11 +45,19 @@ import kotlin.math.roundToInt
 fun HomeScreen(navController: NavController, city: String?) {
     val weatherViewModel: WeatherViewModel = hiltViewModel()
 //    weatherViewModel.getCurrentForecast(city?:"delhi")
-    weatherViewModel.getDailyForecast(city?:"delhi")
+    weatherViewModel.getDailyForecast(city ?: "delhi")
 //    val currentData = weatherViewModel.currentData.collectAsState()
     val dailyData = weatherViewModel.dailyData.collectAsState().value
-    if(dailyData.data == null || dailyData.loading==true)
-        CircularProgressIndicator()
+    if (dailyData.data == null || dailyData.loading == true)
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            CircularProgressIndicator()
+        }
     else
         MainScaffold(dailyData.data, navController)
 }

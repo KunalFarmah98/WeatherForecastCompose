@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weather-Compose</string>
+    <string name="app_name">JetWeatherForecast</string>
     <string name="about_app">JetWeatherForecast v1.0.0</string>
     <string name="api_used">API used in the app: https://api.openweathermap.org </string>
 </resources>
