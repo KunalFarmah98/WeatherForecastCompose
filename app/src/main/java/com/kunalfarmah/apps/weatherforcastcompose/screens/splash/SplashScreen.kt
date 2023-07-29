@@ -49,6 +49,7 @@ fun SplashScreen( navController: NavController) {
         )
         delay(1000)
         // go to homeScreen after 2s following the animation
+        navController.popBackStack()
         navController.navigate(route = "${WeatherScreens.HomeScreen.name}/$defaultCity")
     })
     Surface(

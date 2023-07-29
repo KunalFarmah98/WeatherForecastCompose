@@ -60,7 +60,7 @@ fun HumidityWindPressureRow(weather: WeatherList?) {
                 contentDescription = "humidity icon",
                 modifier = Modifier.size(20.dp)
             )
-            Text(text = "${weather?.humidity}%", style = MaterialTheme.typography.bodyMedium)
+            Text(text = " ${weather?.humidity}%", style = MaterialTheme.typography.bodyMedium)
         }
 
         Row(modifier = Modifier.padding(4.dp)) {
@@ -69,7 +69,7 @@ fun HumidityWindPressureRow(weather: WeatherList?) {
                 contentDescription = "pressure icon",
                 modifier = Modifier.size(20.dp)
             )
-            Text(text = "${weather?.pressure} psi", style = MaterialTheme.typography.bodyMedium)
+            Text(text = " ${weather?.pressure} psi", style = MaterialTheme.typography.bodyMedium)
         }
 
         Row(modifier = Modifier.padding(4.dp)) {
@@ -77,7 +77,7 @@ fun HumidityWindPressureRow(weather: WeatherList?) {
                 painter = painterResource(id = R.drawable.wind), contentDescription = "wind icon",
                 modifier = Modifier.size(20.dp)
             )
-            Text(text = "${weather?.speed} km/h", style = MaterialTheme.typography.bodyMedium)
+            Text(text = " ${weather?.speed} km/h", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
@@ -98,7 +98,7 @@ fun SunsetSunriseRow(weather: WeatherList?) {
                 modifier = Modifier.size(20.dp)
             )
             Text(
-                text = "${SimpleDateFormat("hh:mm aa").format(Date(weather?.sunrise?.toLong() ?: 0))}",
+                text = " ${SimpleDateFormat("hh:mm aa").format(Date(weather?.sunrise?.toLong() ?: 0))}",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -110,7 +110,7 @@ fun SunsetSunriseRow(weather: WeatherList?) {
                 modifier = Modifier.size(20.dp)
             )
             Text(
-                text = "${SimpleDateFormat("hh:mm aa").format(Date(weather?.sunset?.toLong() ?: 0))}",
+                text = " ${SimpleDateFormat("hh:mm aa").format(Date(weather?.sunset?.toLong() ?: 0))}",
                 style = MaterialTheme.typography.bodyMedium
             )
         }

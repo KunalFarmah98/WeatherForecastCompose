@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -46,19 +47,22 @@ fun HomeScreen(navController: NavController, city: String?) {
     weatherViewModel.getDailyForecast(city?:"delhi")
 //    val currentData = weatherViewModel.currentData.collectAsState()
     val dailyData = weatherViewModel.dailyData.collectAsState().value
-    MainScaffold(dailyData, navController)
+    if(dailyData.data == null || dailyData.loading==true)
+        CircularProgressIndicator()
+    else
+        MainScaffold(dailyData.data, navController)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScaffold(
-    dailyData: DataOrException<DailyForecast, Boolean, Exception>,
+    dailyData: DailyForecast?,
     navController: NavController
 ) {
     Scaffold(topBar = {
         WeatherAppBar(
-            title = "${dailyData.data?.city?.name ?: ""}, ${dailyData.data?.city?.country ?: ""}",
+            title = "${dailyData?.city?.name ?: ""}, ${dailyData?.city?.country ?: ""}",
             navController = navController,
             elevation = 5.dp,
             onAddActionClicked = {
@@ -74,11 +78,11 @@ fun MainScaffold(
 
 @Composable
 fun MainContent(
-    dailyData: DataOrException<DailyForecast, Boolean, Exception>,
+    dailyData: DailyForecast?,
     paddingValues: PaddingValues
 ) {
     val imageUrl =
-        "https://openweathermap.org/img/wn/${dailyData.data?.list?.get(0)?.weather?.get(0)?.icon}.png"
+        "https://openweathermap.org/img/wn/${dailyData?.list?.get(0)?.weather?.get(0)?.icon}.png"
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,7 +98,7 @@ fun MainContent(
         Text(
             text = SimpleDateFormat("EEE, dd/MM/yyyy").format(
                 Date(
-                    (dailyData.data?.list?.get(0)?.dt?.toLong() ?: 0) * 1000
+                    (dailyData?.list?.get(0)?.dt?.toLong() ?: 0) * 1000
                 )
             ).toString(),
             style = MaterialTheme.typography.labelLarge,
@@ -116,28 +120,28 @@ fun MainContent(
             ) {
                 WeatherStateImage(imageUrl)
                 Text(
-                    text = dailyData.data?.list?.get(0)?.temp?.day?.roundToInt().toString()
+                    text = dailyData?.list?.get(0)?.temp?.day?.roundToInt().toString()
                         .plus(" \u2103"),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.ExtraBold
                 )
                 Text(
-                    text = dailyData.data?.list?.get(0)?.weather?.get(0)?.main ?: "",
+                    text = dailyData?.list?.get(0)?.weather?.get(0)?.main ?: "",
                     fontStyle = FontStyle.Italic
                 )
             }
         }
 
-        HumidityWindPressureRow(weather = dailyData.data?.list?.get(0))
+        HumidityWindPressureRow(weather = dailyData?.list?.get(0))
         Divider()
-        SunsetSunriseRow(weather = dailyData.data?.list?.get(0))
+        SunsetSunriseRow(weather = dailyData?.list?.get(0))
 
         Text(
             text = "This Week",
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-        WeatherDetailList(data = dailyData.data)
+        WeatherDetailList(data = dailyData)
 
     }
 }

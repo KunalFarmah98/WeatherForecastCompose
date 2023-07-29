@@ -15,7 +15,7 @@ interface WeatherDao {
     fun getFavorites(): Flow<List<Favorite>>
 
     @Query("SELECT * FROM FavoritesTable WHERE city = :city")
-    suspend fun getFavoritesById(city: String): Favorite
+    suspend fun getFavoritesById(city: String):Favorite?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertFavorite(favorite: Favorite)

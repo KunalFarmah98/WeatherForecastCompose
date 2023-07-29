@@ -23,8 +23,10 @@ class FavoriteViewModel @Inject constructor(private val weatherRepository: Weath
         viewModelScope.launch {
            weatherRepository.getFavorites().distinctUntilChanged().collect {
                Log.d(TAG, "favorites found: ${it.size}")
-               _favList.value = it
-               Log.d(TAG, "added favorites ${_favList.value}")
+               if(it.isNotEmpty()) {
+                   _favList.value = it
+                   Log.d(TAG, "added favorites ${_favList.value}")
+               }
            }
         }
     }
@@ -33,4 +35,5 @@ class FavoriteViewModel @Inject constructor(private val weatherRepository: Weath
 
     fun deleteFavorite(favorite: Favorite) = viewModelScope.launch { weatherRepository.deleteFavorite(favorite) }
 
+    suspend fun getFavoriteByCity(city: String) = weatherRepository.getFavoriteByCity(city)
 }

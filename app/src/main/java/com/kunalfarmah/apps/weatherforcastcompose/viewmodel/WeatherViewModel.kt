@@ -9,6 +9,7 @@ import com.kunalfarmah.apps.weatherforcastcompose.repository.WeatherRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,18 +20,17 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
     private val dailyDataFlow : MutableStateFlow<DataOrException<DailyForecast, Boolean, Exception>> = MutableStateFlow(
     DataOrException(null, true, null)
     )
-    val dailyData: StateFlow<DataOrException<DailyForecast, Boolean, Exception>> = dailyDataFlow
+        val dailyData = dailyDataFlow.asStateFlow()
 
 
     private val currentDataFlow: MutableStateFlow<DataOrException<CurrentWeather, Boolean, Exception>> =
-        MutableStateFlow(DataOrException(null, true, null))
-    val currentData: StateFlow<DataOrException<CurrentWeather, Boolean, Exception>> = currentDataFlow
+        MutableStateFlow(DataOrException(null, false, null))
+        val currentData: StateFlow<DataOrException<CurrentWeather, Boolean, Exception>> = currentDataFlow.asStateFlow()
 
     fun getDailyForecast(city: String) {
         viewModelScope.launch {
             if (city.isNullOrEmpty())
                 return@launch
-            dailyData.value.loading = true
             val response = weatherRepository.getDailyForecast(city)
             dailyDataFlow.value = DataOrException(data = response.data, loading = false, e = response.e)
         }
@@ -40,7 +40,6 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
         viewModelScope.launch {
             if (city.isNullOrEmpty())
                 return@launch
-            currentDataFlow.value.loading = true
             val response = weatherRepository.getCurrentWeather(city)
             currentDataFlow.value = DataOrException(data = response.data, loading = false, e = response.e)
         }
