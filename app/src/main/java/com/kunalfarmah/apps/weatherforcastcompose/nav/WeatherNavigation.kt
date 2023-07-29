@@ -7,6 +7,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.kunalfarmah.apps.weatherforcastcompose.screens.dropdown.AboutScreen
+import com.kunalfarmah.apps.weatherforcastcompose.screens.dropdown.FavoriteScreen
+import com.kunalfarmah.apps.weatherforcastcompose.screens.dropdown.SettingsScreen
 import com.kunalfarmah.apps.weatherforcastcompose.screens.home.HomeScreen
 import com.kunalfarmah.apps.weatherforcastcompose.screens.search.SearchScreen
 import com.kunalfarmah.apps.weatherforcastcompose.screens.splash.SplashScreen
@@ -34,6 +37,15 @@ fun WeatherNavigation() {
         }
         composable(WeatherScreens.SearchScreen.name){
             SearchScreen(navController)
+        }
+        composable(WeatherScreens.AboutScreen.name){
+            AboutScreen(navController)
+        }
+        composable(WeatherScreens.FavouriteScreen.name){
+            FavoriteScreen(navController)
+        }
+        composable(WeatherScreens.SettingsScreen.name){
+            SettingsScreen(navController)
         }
     }
 }

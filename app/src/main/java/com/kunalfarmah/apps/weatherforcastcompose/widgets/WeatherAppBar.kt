@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.kunalfarmah.apps.weatherforcastcompose.R
+import com.kunalfarmah.apps.weatherforcastcompose.nav.WeatherScreens
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -119,10 +120,17 @@ fun SettingsDropDown(navController: NavController, showDropDown: MutableState<Bo
         ) {
             items.forEachIndexed { index, text ->
                 DropdownMenuItem(
-                    text = { Text(text, fontWeight = FontWeight.W300) },
+                    text = { Text(text, fontWeight = FontWeight.W300,) },
                     onClick = {
                         expanded.value = false
                         showDropDown.value = false
+                        navController.navigate(
+                            when(text){
+                                "About" -> WeatherScreens.AboutScreen.name
+                                "Favorites" -> WeatherScreens.FavouriteScreen.name
+                                else -> WeatherScreens.SettingsScreen.name
+                            }
+                        )
                     },
                     leadingIcon = {
                         Icon(
