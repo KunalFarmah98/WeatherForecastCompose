@@ -46,7 +46,7 @@ fun WeatherStateImage(imageUrl: String) {
 }
 
 @Composable
-fun HumidityWindPressureRow(weather: WeatherList?) {
+fun HumidityWindPressureRow(weather: WeatherList?, unit: String) {
     Row(
         modifier = Modifier
             .padding(12.dp)
@@ -77,7 +77,7 @@ fun HumidityWindPressureRow(weather: WeatherList?) {
                 painter = painterResource(id = R.drawable.wind), contentDescription = "wind icon",
                 modifier = Modifier.size(20.dp)
             )
-            Text(text = " ${weather?.speed} km/h", style = MaterialTheme.typography.bodyMedium)
+            Text(text = " ${weather?.speed}".plus(if(unit=="metric") " m/s" else " mph"), style = MaterialTheme.typography.bodyMedium)
         }
     }
 }
@@ -119,8 +119,9 @@ fun SunsetSunriseRow(weather: WeatherList?) {
 }
 
 @Composable
-fun WeatherItem(weather: WeatherList) {
+fun WeatherItem(weather: WeatherList, unit: String) {
     val imageUrl = "https://openweathermap.org/img/wn/${weather.weather[0].icon}.png"
+    val degree = if(unit=="metric") "°C" else "°F"
     Surface(
         modifier = Modifier
             .padding(3.dp)
@@ -157,7 +158,7 @@ fun WeatherItem(weather: WeatherList) {
                         fontWeight = FontWeight.SemiBold
                     )
                 ) {
-                    append(weather.temp.max.roundToInt().toString().plus("\u2103"))
+                    append(weather.temp.max.roundToInt().toString().plus(degree))
                 }
                 append("/")
                 withStyle(
@@ -166,7 +167,7 @@ fun WeatherItem(weather: WeatherList) {
                         fontWeight = FontWeight.SemiBold
                     )
                 ) {
-                    append(weather.temp.min.roundToInt().toString().plus("\u2103"))
+                    append(weather.temp.min.roundToInt().toString().plus(degree))
                 }
             })
 
@@ -175,7 +176,7 @@ fun WeatherItem(weather: WeatherList) {
 }
 
 @Composable
-fun WeatherDetailList(data: DailyForecast?) {
+fun WeatherDetailList(data: DailyForecast?, unit:String) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -190,7 +191,7 @@ fun WeatherDetailList(data: DailyForecast?) {
             contentPadding = PaddingValues(2.dp)
         ) {
             items(data?.list?.minus(data.list.first()) ?: listOf()) { item ->
-                WeatherItem(weather = item)
+                WeatherItem(weather = item, unit)
             }
         }
 

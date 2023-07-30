@@ -27,11 +27,11 @@ class WeatherViewModel @Inject constructor(private val weatherRepository: Weathe
         MutableStateFlow(DataOrException(null, false, null))
         val currentData: StateFlow<DataOrException<CurrentWeather, Boolean, Exception>> = currentDataFlow.asStateFlow()
 
-    fun getDailyForecast(city: String) {
+    fun getDailyForecast(city: String, unit: String) {
         viewModelScope.launch {
             if (city.isNullOrEmpty())
                 return@launch
-            val response = weatherRepository.getDailyForecast(city)
+            val response = weatherRepository.getDailyForecast(city, unit)
             dailyDataFlow.value = DataOrException(data = response.data, loading = false, e = response.e)
         }
     }

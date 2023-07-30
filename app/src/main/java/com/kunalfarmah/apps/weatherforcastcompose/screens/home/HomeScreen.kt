@@ -19,6 +19,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,6 +32,7 @@ import androidx.navigation.NavController
 import com.kunalfarmah.apps.weatherforcastcompose.data.DataOrException
 import com.kunalfarmah.apps.weatherforcastcompose.model.DailyForecast
 import com.kunalfarmah.apps.weatherforcastcompose.nav.WeatherScreens
+import com.kunalfarmah.apps.weatherforcastcompose.viewmodel.SettingsViewModel
 import com.kunalfarmah.apps.weatherforcastcompose.viewmodel.WeatherViewModel
 import com.kunalfarmah.apps.weatherforcastcompose.widgets.HumidityWindPressureRow
 import com.kunalfarmah.apps.weatherforcastcompose.widgets.SunsetSunriseRow
@@ -44,8 +47,25 @@ import kotlin.math.roundToInt
 @Composable
 fun HomeScreen(navController: NavController, city: String?) {
     val weatherViewModel: WeatherViewModel = hiltViewModel()
+    val settingsViewModel: SettingsViewModel = hiltViewModel()
+
+    val unit = remember {
+        mutableStateOf("")
+    }
+    fun stateCallback(it: String){
+        if(it.isNullOrEmpty()){
+            unit.value = "metric"
+        }
+        if(unit.value == ""){
+            when(it){
+                "Metric (°C)" -> unit.value = "metric"
+                "Imperial (°F)" -> unit.value = "imperial"
+            }
+        }
+    }
+    settingsViewModel.getSavedUnitState(::stateCallback)
 //    weatherViewModel.getCurrentForecast(city?:"delhi")
-    weatherViewModel.getDailyForecast(city ?: "delhi")
+    weatherViewModel.getDailyForecast(city ?: "delhi", unit.value)
 //    val currentData = weatherViewModel.currentData.collectAsState()
     val dailyData = weatherViewModel.dailyData.collectAsState().value
     if (dailyData.data == null || dailyData.loading == true)
@@ -59,7 +79,7 @@ fun HomeScreen(navController: NavController, city: String?) {
             CircularProgressIndicator()
         }
     else
-        MainScaffold(dailyData.data, navController)
+        MainScaffold(dailyData.data, navController, unit.value)
 }
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -67,7 +87,8 @@ fun HomeScreen(navController: NavController, city: String?) {
 @Composable
 fun MainScaffold(
     dailyData: DailyForecast?,
-    navController: NavController
+    navController: NavController,
+    unit: String
 ) {
     Scaffold(topBar = {
         WeatherAppBar(
@@ -81,14 +102,15 @@ fun MainScaffold(
             Log.d("Home", "MainScaffold: button clicked")
         }
     }) {
-        MainContent(dailyData, paddingValues = it)
+        MainContent(dailyData, paddingValues = it, unit)
     }
 }
 
 @Composable
 fun MainContent(
     dailyData: DailyForecast?,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    unit: String
 ) {
     val imageUrl =
         "https://openweathermap.org/img/wn/${dailyData?.list?.get(0)?.weather?.get(0)?.icon}.png"
@@ -130,7 +152,7 @@ fun MainContent(
                 WeatherStateImage(imageUrl)
                 Text(
                     text = dailyData?.list?.get(0)?.temp?.day?.roundToInt().toString()
-                        .plus(" \u2103"),
+                        .plus(if(unit == "metric") "°C" else "°F"),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.ExtraBold
                 )
@@ -141,7 +163,7 @@ fun MainContent(
             }
         }
 
-        HumidityWindPressureRow(weather = dailyData?.list?.get(0))
+        HumidityWindPressureRow(weather = dailyData?.list?.get(0), unit)
         Divider()
         SunsetSunriseRow(weather = dailyData?.list?.get(0))
 
@@ -150,7 +172,7 @@ fun MainContent(
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.Bold
         )
-        WeatherDetailList(data = dailyData)
+        WeatherDetailList(data = dailyData, unit)
 
     }
 }

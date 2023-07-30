@@ -1,5 +1,6 @@
 package com.kunalfarmah.apps.weatherforcastcompose.repository
 
+import android.util.Log
 import com.kunalfarmah.apps.weatherforcastcompose.data.DataOrException
 import com.kunalfarmah.apps.weatherforcastcompose.model.CurrentWeather
 import com.kunalfarmah.apps.weatherforcastcompose.model.DailyForecast
@@ -14,9 +15,10 @@ class WeatherRepository @Inject constructor(private val weatherApi: WeatherApi, 
     /**
      * Api Functions
      */
-    suspend fun getDailyForecast(city: String) : DataOrException<DailyForecast, Boolean, Exception> {
+    suspend fun getDailyForecast(city: String, unit: String) : DataOrException<DailyForecast, Boolean, Exception> {
         val response = try{
-            weatherApi.getDailyForecast(city)
+            Log.d("WeatherRepo", "getDailyForecast: $city $unit")
+            weatherApi.getDailyForecast(city = city, units = unit)
         }
         catch (e:Exception){
             return DataOrException(e=e)
