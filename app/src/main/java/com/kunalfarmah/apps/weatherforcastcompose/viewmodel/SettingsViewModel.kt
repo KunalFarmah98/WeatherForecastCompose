@@ -13,6 +13,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -33,11 +35,16 @@ class SettingsViewModel @Inject constructor(@ApplicationContext val context: Con
         }
     }
 
-    fun getSavedUnitState(): Flow<String> {
-        return context.dataStore.data.map {
-            val value = it[stringPreferencesKey("unit")] ?: "Metric (°C)"
+    fun getSavedUnitState(callback: (unit:String)->Unit) {
+        val unit = context.dataStore.data.map {
+            val value = it[stringPreferencesKey("unit")] ?: "Metric °C"
             Log.d("DATASTORE", "getSavedUnitState: $value")
             value
+        }
+        viewModelScope.launch {
+            unit.collectLatest {
+                callback(it)
+            }
         }
     }
 }

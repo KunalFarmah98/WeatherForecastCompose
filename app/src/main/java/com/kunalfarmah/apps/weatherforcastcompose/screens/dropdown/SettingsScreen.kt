@@ -49,11 +49,20 @@ fun SettingsScreen(
         mutableStateOf(false)
     }
 
-    val savedUnit = settingsViewModel.getSavedUnitState().collectAsState(initial = "Metric (°C)")
-
     var choiceState = remember {
-        mutableStateOf(savedUnit.value)
+        mutableStateOf("")
     }
+
+    fun stateCallback(unit: String){
+        if(unit.isNullOrEmpty()){
+            choiceState.value = "Metric (°C)"
+        }
+        if(choiceState.value == "")
+            choiceState.value = unit
+    }
+
+    settingsViewModel.getSavedUnitState(::stateCallback)
+
     Log.d("DATASTORE", "SettingsScreen: choiceState = ${choiceState.value}")
     Scaffold(topBar = {
         WeatherAppBar(
