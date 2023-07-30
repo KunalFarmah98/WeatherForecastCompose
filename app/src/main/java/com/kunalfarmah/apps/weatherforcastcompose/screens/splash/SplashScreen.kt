@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import com.kunalfarmah.apps.weatherforcastcompose.R
 import com.kunalfarmah.apps.weatherforcastcompose.nav.WeatherScreens
 import kotlinx.coroutines.delay
@@ -42,15 +43,17 @@ fun SplashScreen( navController: NavController) {
         scale.animateTo(
             targetValue = 0.9f,
             animationSpec = tween(
-                durationMillis = 800,
+                durationMillis = 1000,
                 easing = {
                     OvershootInterpolator(8f).getInterpolation(it)
                 })
         )
-        delay(1000)
-        // go to homeScreen after 2s following the animation
-        navController.popBackStack()
-        navController.navigate(route = "${WeatherScreens.HomeScreen.name}/$defaultCity")
+        // go to homeScreen following the animation
+        navController.navigate(route = "${WeatherScreens.HomeScreen.name}/$defaultCity"){
+            popUpTo(WeatherScreens.SplashScreen.name) {
+                inclusive = true
+            }
+        }
     })
     Surface(
         modifier = Modifier
