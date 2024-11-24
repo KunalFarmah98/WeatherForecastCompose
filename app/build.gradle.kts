@@ -1,9 +1,17 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
     id("com.google.dagger.hilt.android")
 }
+
+val localProperties = Properties()
+localProperties.load(FileInputStream("gradle.properties"))
+val freeApiKey = localProperties.getProperty("freeApiKey")
+val proApiKey = localProperties.getProperty("proApiKey")
 
 android {
     namespace = "com.kunalfarmah.apps.weatherforcastcompose"
@@ -15,6 +23,9 @@ android {
         targetSdk = 33
         versionCode = 1
         versionName = "1.0"
+
+        buildConfigField("String", "API_KEY_FREE", freeApiKey)
+        buildConfigField("String", "API_KEY_PRO", freeApiKey)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -40,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.3.2"
